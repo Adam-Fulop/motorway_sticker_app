@@ -1,25 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:motorway_sticker_app/components/components.dart';
+import 'package:motorway_sticker_app/providers/providers.dart';
+import 'package:motorway_sticker_app/utils/utils.dart';
 
 class CountyStickers extends ConsumerWidget {
   const CountyStickers({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: const Text('County Stickers'), centerTitle: true),
-        body: Column(
-          children: [
-            Placeholder(),
-            FilledButton(
-              onPressed: () => context.push('/summary'),
-              child: Text('PLACE ORDER'),
+    final appData = ref.watch(appDataProvider);
+    final selectedCounties = ref.watch(selectedCountiesProvider);
+    int total = 0;
+
+    return appData.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error:
+          (e, _) => ErrorRetryView(
+            message: e.toString(),
+            onRetry: () => ref.invalidate(appDataProvider),
+          ),
+      data: (data) {
+        final dataPayload = data['vignettes']['payload'];
+        final vignettes = dataPayload?['highwayVignettes'] as List? ?? [];
+        final counties = dataPayload?['counties'] as List? ?? [];
+        final annualVignette = vignettes.firstWhere(
+          (v) => (v['vignetteType'] as List).contains('YEAR'),
+          orElse: () => null,
+        );
+
+        if (annualVignette == null) {
+          return const Center(
+            child: Text('Nem található éves megyematrica ...'),
+          );
+        } else {
+          total =
+              selectedCounties.entries.where((e) => e.value).length *
+              (annualVignette['sum'] as num).toInt();
+        }
+
+        final price = (annualVignette['sum'] as num).toInt();
+
+        return SafeArea(
+          child: Scaffold(
+            appBar: AppBar(title: const Text('County Vignettes')),
+            body: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: counties.length,
+                    itemBuilder: (context, index) {
+                      final county = counties[index] as Map<String, dynamic>;
+                      final countyId = county['id'] as String;
+                      final countyName = county['name'] as String;
+                      final isSelected = selectedCounties[countyId] ?? false;
+
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: CheckboxListTile(
+                          title: Text(countyName),
+                          subtitle: Text('${numberFormatter(price)} HUF'),
+                          value: isSelected,
+                          onChanged:
+                              (_) => ref
+                                  .read(selectedCountiesProvider.notifier)
+                                  .toggleCounty(countyId),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Total: ${numberFormatter(total)} HUF',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      FilledButton(
+                        onPressed:
+                            total > 0 ? () => context.push('/summary') : null,
+                        child: const Text('Megrendelés'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
