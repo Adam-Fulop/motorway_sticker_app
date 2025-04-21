@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:motorway_sticker_app/utils/constants.dart';
+import 'package:motorway_sticker_app/utils/utils.dart';
 
 import 'info_row.dart';
 

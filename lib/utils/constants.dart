@@ -20,5 +20,5 @@ String getVignetteDisplayName(String type) {
 
 String getVehicleDisplayName(String? type) {
   const unknown = 'ismeretlen';
-  return vignetteTypeDisplayNames[type] ?? unknown;
+  return vehicleTypeDisplayNames[type] ?? unknown;
 }

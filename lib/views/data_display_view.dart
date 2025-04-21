@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:motorway_sticker_app/components/components.dart';
 import 'package:motorway_sticker_app/providers/providers.dart';
-import 'package:motorway_sticker_app/utils/constants.dart';
+import 'package:motorway_sticker_app/utils/utils.dart';
 
 class DataDisplayView extends ConsumerWidget {
   const DataDisplayView({super.key});
@@ -37,7 +37,7 @@ class DataDisplayView extends ConsumerWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Placeholder(), // list of vignettes ...
+                    child: VignettesSection(vignetteData: data['vignettes']),
                   ),
                 ),
                 _buildBottomButton(ref, context),
@@ -62,7 +62,7 @@ class DataDisplayView extends ConsumerWidget {
               selectedVignette != null
                   ? () => _handleButtonPress(ref, context)
                   : null,
-          child: Text(isAnnualSelected ? 'Continue' : 'Purchase'),
+          child: Text(isAnnualSelected ? 'Folytatás' : 'Megrendelés'),
         ),
       ),
     );
