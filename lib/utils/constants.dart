@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
-const Color custGreen = Color.fromRGBO(180, 255, 0, 1.0);
+const Color countyColor = Color.fromRGBO(39, 106, 74, 1.0);
+
+const TextStyle whiteFgColor = TextStyle(color: Colors.white);
+
+Color green(BuildContext ctx) {
+  return Theme.of(ctx).colorScheme.primary;
+}
 
 const int sysUsageFee = 100;
 

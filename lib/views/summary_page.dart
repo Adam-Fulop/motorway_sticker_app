@@ -43,8 +43,8 @@ class SummaryPage extends ConsumerWidget {
           child: Scaffold(
             appBar: AppBar(
               title: const Text('Vásárlás megerősítése'),
-              backgroundColor: Color.fromRGBO(180, 255, 0, 1.0),
-              foregroundColor: Colors.black,
+              backgroundColor: green(context),
+              foregroundColor: Colors.white,
             ),
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -21,7 +21,7 @@ final mapSourceProvider = Provider<MapShapeSource>((ref) {
     primaryValueMapper: (index) => allRegionIds[index],
     shapeColorValueMapper: (index) {
       final id = allRegionIds[index];
-      return highlightedRegionIds.contains(id) ? custGreen : Colors.grey[300];
+      return highlightedRegionIds.contains(id) ? countyColor : Colors.grey[300];
     },
   );
 });

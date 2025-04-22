@@ -15,7 +15,8 @@ class DataDisplayView extends ConsumerWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Autópálya matrica vásárlás'),
+          title: const Text('Autópálya matrica vásárlás', style: whiteFgColor),
+          backgroundColor: green(context),
           centerTitle: true,
         ),
         body: appData.when(

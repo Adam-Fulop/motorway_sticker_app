@@ -51,7 +51,11 @@ class CountyStickers extends ConsumerWidget {
 
         return SafeArea(
           child: Scaffold(
-            appBar: AppBar(title: const Text('County Vignettes')),
+            appBar: AppBar(
+              title: const Text('County Vignettes', style: whiteFgColor),
+              backgroundColor: green(context),
+              foregroundColor: Colors.white,
+            ),
             body: Column(
               children: [
                 // dip. Hun. map.
@@ -91,7 +95,10 @@ class CountyStickers extends ConsumerWidget {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: CheckboxListTile(
-                          title: Text(countyName),
+                          title: Text(
+                            countyName,
+                            style: TextStyle(fontWeight: FontWeight.w400),
+                          ),
                           subtitle: Text('${numberFormatter(price)} HUF'),
                           value: isSelected,
                           onChanged: (value) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:motorway_sticker_app/utils/utils.dart';
@@ -13,19 +14,21 @@ class HighwayApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appBarColor = custGreen;
-
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      builder: (context, child) {
+        SystemChrome.setSystemUIOverlayStyle(
+          SystemUiOverlayStyle(
+            statusBarColor: green(context),
+            statusBarIconBrightness: Brightness.light,
+          ),
+        );
+        return child!;
+      },
       theme: ThemeData(
         fontFamily: 'Roboto',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
-        appBarTheme: AppBarTheme(
-          backgroundColor: appBarColor,
-          foregroundColor: Colors.black,
-          elevation: 4,
-        ),
       ),
       routerConfig: _router,
     );

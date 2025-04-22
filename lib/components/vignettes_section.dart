@@ -65,12 +65,12 @@ class VignettesSection extends ConsumerWidget {
     BuildContext context,
   ) {
     final type = (v['vignetteType'] as List).first.toString();
-    final isSelected = selectedType == type;
-    final colorScheme = Theme.of(context).colorScheme;
+    // final isSelected = selectedType == type;
+    // final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      color: isSelected ? colorScheme.primaryContainer : colorScheme.surface,
+      // color: isSelected ? colorScheme.primaryContainer : colorScheme.surface,
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
         onTap: () => ref.read(selectedVignetteProvider.notifier).state = type,
@@ -90,13 +90,11 @@ class VignettesSection extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(getVignetteDisplayName(type)),
                     Text(
-                      '${numberFormatter(v['sum'])} Ft.-',
-                      style: TextStyle(
-                        color: colorScheme.onSurface.withAlpha(153),
-                      ),
+                      getVignetteDisplayName(type),
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     ),
+                    Text('${numberFormatter(v['sum'])} Ft.-'),
                   ],
                 ),
               ),
