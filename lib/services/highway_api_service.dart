@@ -42,4 +42,23 @@ class HighwayApiService {
       throw Exception('Invalid JSON: ${e.message}');
     }
   }
+
+  Future<String> submitOrder(Map<String, dynamic> body) async {
+    final String apiUrl = '$baseUrl/v1/highway/order';
+
+    try {
+      final response = await http
+          .post(
+            Uri.parse(apiUrl),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode(body),
+          )
+          .timeout(_timeout);
+
+      final decoded = jsonDecode(response.body);
+      return decoded['statusCode'] == 'OK' ? 'SUCCESS' : 'FAILURE';
+    } catch (e) {
+      throw Exception('Error: ${e.toString()}');
+    }
+  }
 }

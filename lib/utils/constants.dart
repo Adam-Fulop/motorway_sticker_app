@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 const Color custGreen = Color.fromRGBO(180, 255, 0, 1.0);
 
+const int sysUsageFee = 100;
+
 class VignetteType {
   static const String day = 'DAY';
   static const String week = 'WEEK';

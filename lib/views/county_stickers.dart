@@ -11,11 +11,19 @@ class CountyStickers extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Trigger after first frame — we assume map has loaded by now
+      Future.delayed(const Duration(milliseconds: 100)).then((_) {
+        ref.read(mapLoadedProvider.notifier).state = true;
+      });
+    });
+    final isMapLoaded = ref.watch(mapLoadedProvider);
+
     final appData = ref.watch(appDataProvider);
     final selectedCounties = ref.watch(selectedCountiesProvider);
     final selectedOnMap = ref.watch(selectedCountiesOnMapProvider.notifier);
     final mapSource = ref.watch(mapSourceProvider);
-    int total = 0;
+    final total = ref.watch(countiesTotalProvider);
 
     return appData.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -37,10 +45,6 @@ class CountyStickers extends ConsumerWidget {
           return const Center(
             child: Text('Nem található éves megyematrica ...'),
           );
-        } else {
-          total =
-              selectedCounties.entries.where((e) => e.value).length *
-              (annualVignette['sum'] as num).toInt();
         }
 
         final price = (annualVignette['sum'] as num).toInt();
@@ -50,21 +54,27 @@ class CountyStickers extends ConsumerWidget {
             appBar: AppBar(title: const Text('County Vignettes')),
             body: Column(
               children: [
-                // ----
+                // dip. Hun. map.
                 Expanded(
                   flex: 2,
-                  child: SfMaps(
-                    layers: [
-                      MapShapeLayer(
-                        source: mapSource,
-                        showDataLabels: false,
-                        color: Colors.grey[300],
-                        dataLabelSettings: const MapDataLabelSettings(
-                          textStyle: TextStyle(fontSize: 10),
-                        ),
-                      ),
-                    ],
-                  ),
+                  child:
+                      !isMapLoaded
+                          ? const Center(child: CircularProgressIndicator())
+                          : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: SfMaps(
+                              layers: [
+                                MapShapeLayer(
+                                  source: mapSource,
+                                  showDataLabels: false,
+                                  color: Colors.grey[300],
+                                  dataLabelSettings: const MapDataLabelSettings(
+                                    textStyle: TextStyle(fontSize: 10),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                 ),
                 // ----
                 Expanded(
