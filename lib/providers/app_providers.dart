@@ -10,3 +10,5 @@ final orderDataProvider = StateProvider<Map<String, dynamic>?>((ref) => null);
 final appDataProvider = FutureProvider<Map<String, dynamic>>((ref) {
   return ref.read(apiServiceProvider).fetchAllData();
 });
+
+final selectedCountiesOnMapProvider = StateProvider<List<String>>((ref) => []);

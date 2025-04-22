@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:motorway_sticker_app/components/components.dart';
 import 'package:motorway_sticker_app/providers/providers.dart';
 import 'package:motorway_sticker_app/utils/utils.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 
 class CountyStickers extends ConsumerWidget {
   const CountyStickers({super.key});
@@ -12,6 +13,8 @@ class CountyStickers extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appData = ref.watch(appDataProvider);
     final selectedCounties = ref.watch(selectedCountiesProvider);
+    final selectedOnMap = ref.watch(selectedCountiesOnMapProvider.notifier);
+    final mapSource = ref.watch(mapSourceProvider);
     int total = 0;
 
     return appData.when(
@@ -47,7 +50,25 @@ class CountyStickers extends ConsumerWidget {
             appBar: AppBar(title: const Text('County Vignettes')),
             body: Column(
               children: [
+                // ----
                 Expanded(
+                  flex: 2,
+                  child: SfMaps(
+                    layers: [
+                      MapShapeLayer(
+                        source: mapSource,
+                        showDataLabels: false,
+                        color: Colors.grey[300],
+                        dataLabelSettings: const MapDataLabelSettings(
+                          textStyle: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // ----
+                Expanded(
+                  flex: 3,
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: counties.length,
@@ -63,10 +84,19 @@ class CountyStickers extends ConsumerWidget {
                           title: Text(countyName),
                           subtitle: Text('${numberFormatter(price)} HUF'),
                           value: isSelected,
-                          onChanged:
-                              (_) => ref
-                                  .read(selectedCountiesProvider.notifier)
-                                  .toggleCounty(countyId),
+                          onChanged: (value) {
+                            selectedOnMap.update(
+                              (state) =>
+                                  value!
+                                      ? [...state, countyName] // if true, add
+                                      : state
+                                          .where((item) => item != countyName)
+                                          .toList(), // if false, remove
+                            );
+                            ref
+                                .read(selectedCountiesProvider.notifier)
+                                .toggleCounty(countyId);
+                          },
                         ),
                       );
                     },
