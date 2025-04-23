@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:motorway_sticker_app/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:motorway_sticker_app/components/components.dart';
 import 'package:motorway_sticker_app/providers/providers.dart';
@@ -35,6 +37,8 @@ class _PaymentResultPageState extends ConsumerState<PaymentResultPage> {
   @override
   Widget build(BuildContext context) {
     final paymentResult = ref.watch(paymentResultProvider);
+    const String success = 'SUCCESSFUL PAYMENT';
+    const String failure = 'UNSUCCESSFUL ORDER';
 
     return PopScope(
       canPop: false,
@@ -51,8 +55,10 @@ class _PaymentResultPageState extends ConsumerState<PaymentResultPage> {
                 (result) => _buildResultContent(
                   context,
                   result == 'SUCCESS'
-                      ? 'SUCCESSFUL PAYMENT'
-                      : 'UNSUCCESSFUL ORDER',
+                      ? success
+                      : result == 'FAILURE'
+                      ? failure
+                      : null,
                   ref,
                 ),
           ),
@@ -63,22 +69,32 @@ class _PaymentResultPageState extends ConsumerState<PaymentResultPage> {
 
   Widget _buildResultContent(
     BuildContext context,
-    String message,
+    String? message,
     WidgetRef ref,
   ) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message, style: Theme.of(context).textTheme.headlineMedium),
-          const SizedBox(height: 20),
-          FilledButton(
-            onPressed: () => _resetAndNavigateHome(ref, context),
-            child: const Text('OK'),
+    return message != null
+        ? Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              message == 'SUCCESSFUL PAYMENT'
+                  ? SvgPicture.asset(SvgPic.success, height: 300)
+                  : SvgPicture.asset(SvgPic.failure, height: 300),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: Text(
+                  message,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+              FilledButton(
+                onPressed: () => _resetAndNavigateHome(ref, context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        )
+        : SizedBox();
   }
 
   void _resetAndNavigateHome(WidgetRef ref, BuildContext context) {

@@ -18,7 +18,10 @@ class _DataDisplayViewState extends ConsumerState<DataDisplayView> {
   void initState() {
     super.initState();
     // Preload the mapSource ...
-    Future.microtask(() => ref.read(mapSourceProvider));
+    Future.microtask(() async {
+      ref.read(mapSourceProvider);
+      await SvgPic.preloadSVGs();
+    });
   }
 
   @override

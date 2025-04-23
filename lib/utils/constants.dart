@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 const Color countyColor = Color.fromRGBO(39, 106, 74, 1.0);
 
@@ -56,3 +57,19 @@ final countyToRegionIDs = <String, List<String>>{
   'Veszprém': ['HUVM', 'HUVE'],
   'Zala': ['HUZE', 'HUNK', 'HUZA'],
 };
+
+class SvgPic {
+  static const String success = 'assets/images/highway_success.svg';
+  static const String failure = 'assets/images/highway_failure.svg';
+
+  static Future<void> preloadSVGs() async {
+    final assets = [success, failure];
+    for (final asset in assets) {
+      final loader = SvgAssetLoader(asset);
+      await svg.cache.putIfAbsent(
+        loader.cacheKey(null),
+        () => loader.loadBytes(null),
+      );
+    }
+  }
+}
