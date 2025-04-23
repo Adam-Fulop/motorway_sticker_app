@@ -6,19 +6,24 @@ import 'package:motorway_sticker_app/providers/providers.dart';
 import 'package:motorway_sticker_app/utils/utils.dart';
 import 'package:syncfusion_flutter_maps/maps.dart';
 
-class CountyStickers extends ConsumerWidget {
+class CountyStickers extends ConsumerStatefulWidget {
   const CountyStickers({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Trigger after first frame — we assume map has loaded by now
-      Future.delayed(const Duration(milliseconds: 100)).then((_) {
-        ref.read(mapLoadedProvider.notifier).state = true;
-      });
-    });
-    final isMapLoaded = ref.watch(mapLoadedProvider);
+  ConsumerState<ConsumerStatefulWidget> createState() => _CountyStickersState();
+}
 
+class _CountyStickersState extends ConsumerState<CountyStickers> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(mapLoadedProvider.notifier).state = true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appData = ref.watch(appDataProvider);
     final selectedCounties = ref.watch(selectedCountiesProvider);
     final selectedOnMap = ref.watch(selectedCountiesOnMapProvider.notifier);
@@ -58,29 +63,28 @@ class CountyStickers extends ConsumerWidget {
             ),
             body: Column(
               children: [
-                // dip. Hun. map.
                 Expanded(
                   flex: 2,
-                  child:
-                      !isMapLoaded
-                          ? const Center(child: CircularProgressIndicator())
-                          : Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: SfMaps(
-                              layers: [
-                                MapShapeLayer(
-                                  source: mapSource,
-                                  showDataLabels: false,
-                                  color: Colors.grey[300],
-                                  dataLabelSettings: const MapDataLabelSettings(
-                                    textStyle: TextStyle(fontSize: 10),
-                                  ),
-                                ),
-                              ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 600),
+                      opacity: 1.0,
+                      child: SfMaps(
+                        layers: [
+                          MapShapeLayer(
+                            source: mapSource,
+                            showDataLabels: false,
+                            color: Colors.grey[300],
+                            dataLabelSettings: const MapDataLabelSettings(
+                              textStyle: TextStyle(fontSize: 10),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                // ----
                 Expanded(
                   flex: 3,
                   child: ListView.builder(
@@ -144,3 +148,9 @@ class CountyStickers extends ConsumerWidget {
     );
   }
 }
+
+// class CountyStickers extends ConsumerWidget {
+//   const CountyStickers({super.key});
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref)

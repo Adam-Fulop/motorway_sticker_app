@@ -39,21 +39,24 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const DataDisplayView(),
+      pageBuilder: (context, state) => firstPage(DataDisplayView(), state),
       routes: [
         GoRoute(
           path: 'county_stickers',
-          builder: (context, state) => const CountyStickers(),
+          pageBuilder:
+              (context, state) => defaultTransition(CountyStickers(), state),
         ),
         GoRoute(
           path: 'summary',
-          builder: (context, state) => const SummaryPage(),
+          pageBuilder:
+              (context, state) => defaultTransition(SummaryPage(), state),
         ),
       ],
     ),
     GoRoute(
       path: '/payment_result',
-      builder: (context, state) => const PaymentResultPage(),
+      pageBuilder:
+          (context, state) => defaultTransition(PaymentResultPage(), state),
     ),
   ],
 );

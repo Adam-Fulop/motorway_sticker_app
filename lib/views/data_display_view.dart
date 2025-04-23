@@ -5,11 +5,24 @@ import 'package:motorway_sticker_app/components/components.dart';
 import 'package:motorway_sticker_app/providers/providers.dart';
 import 'package:motorway_sticker_app/utils/utils.dart';
 
-class DataDisplayView extends ConsumerWidget {
+class DataDisplayView extends ConsumerStatefulWidget {
   const DataDisplayView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DataDisplayViewState();
+}
+
+class _DataDisplayViewState extends ConsumerState<DataDisplayView> {
+  @override
+  void initState() {
+    super.initState();
+    // Preload the mapSource ...
+    Future.microtask(() => ref.read(mapSourceProvider));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appData = ref.watch(appDataProvider);
 
     return SafeArea(

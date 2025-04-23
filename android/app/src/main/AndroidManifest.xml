@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="motorway_sticker_app"
+        android:label="Motorway Stickers"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
