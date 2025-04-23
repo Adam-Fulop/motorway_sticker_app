@@ -94,7 +94,7 @@ class VignettesSection extends ConsumerWidget {
                       getVignetteDisplayName(type),
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
-                    Text('${numberFormatter(v['sum'])} Ft.-'),
+                    Text('${numberFormatter(v['sum'])} Ft'),
                   ],
                 ),
               ),

@@ -6,7 +6,7 @@ final selectedVignetteProvider = StateProvider<String?>((ref) => null);
 
 final apiServiceProvider = Provider((ref) => HighwayApiService());
 
-final orderDataProvider = StateProvider<Map<String, dynamic>?>((ref) => null);
+final orderDataProvider = StateProvider<Map<String, dynamic>>((ref) => {});
 
 final appDataProvider = FutureProvider<Map<String, dynamic>>((ref) {
   return ref.read(apiServiceProvider).fetchAllData();

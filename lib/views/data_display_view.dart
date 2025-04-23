@@ -30,6 +30,7 @@ class _DataDisplayViewState extends ConsumerState<DataDisplayView> {
         appBar: AppBar(
           title: const Text('Autópálya matrica vásárlás', style: whiteFgColor),
           backgroundColor: green(context),
+          foregroundColor: Colors.white,
           centerTitle: true,
         ),
         body: appData.when(

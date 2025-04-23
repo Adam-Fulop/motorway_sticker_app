@@ -1,31 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:motorway_sticker_app/components/components.dart';
 import 'package:motorway_sticker_app/providers/providers.dart';
 
-class PaymentResultPage extends ConsumerWidget {
+class PaymentResultPage extends ConsumerStatefulWidget {
   const PaymentResultPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PaymentResultPageState();
+}
+
+class _PaymentResultPageState extends ConsumerState<PaymentResultPage> {
+  @override
+  void initState() {
+    super.initState();
+    _submitOrder();
+  }
+
+  void _submitOrder() {
+    Future.microtask(() async {
+      final apiService = ref.read(apiServiceProvider);
+      final orderData = ref.read(orderDataProvider);
+
+      if (orderData.isNotEmpty) {
+        await ref
+            .read(paymentResultProvider.notifier)
+            .submitOrder(orderData, apiService);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final paymentResult = ref.watch(paymentResultProvider);
 
     return PopScope(
-      // onWillPop: () async => false,
       canPop: false,
       child: SafeArea(
         child: Scaffold(
           body: paymentResult.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error:
-                (error, _) =>
-                    _buildResultContent(context, error.toString(), ref),
+                (error, _) => ErrorRetryView(
+                  message: error.toString(),
+                  onRetry: _submitOrder,
+                ),
             data:
                 (result) => _buildResultContent(
                   context,
                   result == 'SUCCESS'
-                      ? 'SIKERES FIZETÉS'
-                      : 'SIKERTELEN FIZETÉS :-(',
+                      ? 'SUCCESSFUL PAYMENT'
+                      : 'UNSUCCESSFUL ORDER',
                   ref,
                 ),
           ),
@@ -57,8 +84,8 @@ class PaymentResultPage extends ConsumerWidget {
   void _resetAndNavigateHome(WidgetRef ref, BuildContext context) {
     ref.invalidate(selectedVignetteProvider);
     ref.invalidate(selectedCountiesProvider);
-    ref.invalidate(orderDataProvider);
     ref.invalidate(selectedCountiesOnMapProvider);
+    ref.invalidate(orderDataProvider);
     ref.read(paymentResultProvider.notifier).reset();
     context.go('/');
   }

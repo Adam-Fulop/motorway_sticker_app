@@ -129,7 +129,7 @@ class _CountyStickersState extends ConsumerState<CountyStickers> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Total: ${numberFormatter(total)} HUF',
+                        'Total: ${numberFormatter(total)} Ft',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       FilledButton(

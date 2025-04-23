@@ -14,17 +14,6 @@ class SummaryPage extends ConsumerWidget {
     final selectedCounties = ref.watch(selectedCountiesProvider);
     final appData = ref.watch(appDataProvider);
 
-    ref.listen<AsyncValue<String>>(paymentResultProvider, (prev, next) {
-      next.whenOrNull(
-        data: (result) {
-          if (result.isNotEmpty) {
-            context.go('/payment_result');
-          }
-        },
-        error: (_, __) => context.go('/payment_result'),
-      );
-    });
-
     return appData.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error:
@@ -42,7 +31,7 @@ class SummaryPage extends ConsumerWidget {
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(
-              title: const Text('Vásárlás megerősítése'),
+              title: const Text('Vásárlás megerősítése', style: whiteFgColor),
               backgroundColor: green(context),
               foregroundColor: Colors.white,
             ),
@@ -126,13 +115,13 @@ class SummaryPage extends ConsumerWidget {
                     children: [
                       const Divider(height: 32),
                       Text(
-                        'Rendszerhasználati díj: ${numberFormatter(sysUsageFee)} Ft.-',
+                        'Rendszerhasználati díj: ${numberFormatter(sysUsageFee)} Ft',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.normal,
                         ),
                       ),
                       Text(
-                        'Összesen: ${numberFormatter(total)} Ft.-',
+                        'Összesen: ${numberFormatter(total)} Ft',
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
@@ -154,10 +143,7 @@ class SummaryPage extends ConsumerWidget {
 
                             ref.read(orderDataProvider.notifier).state =
                                 orderData;
-                            final apiService = ref.read(apiServiceProvider);
-                            await ref
-                                .read(paymentResultProvider.notifier)
-                                .submitOrder(orderData, apiService);
+                            context.go('/payment_result');
                           },
                           child: const Text(
                             'Vásárlás',
