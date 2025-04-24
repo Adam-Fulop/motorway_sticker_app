@@ -1,9 +1,15 @@
 import 'dart:convert';
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class HighwayApiService {
-  HighwayApiService({this.baseUrl = 'http://10.0.2.2:8080'});
+  HighwayApiService({String? baseUrl})
+    : baseUrl =
+          baseUrl ??
+          (kIsWeb
+              ? 'http://localhost:8090'
+              : 'http://10.0.2.2:8080'); // Android emulator default
 
   final String baseUrl;
   static const _timeout = Duration(seconds: 10);

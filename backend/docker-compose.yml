@@ -17,3 +17,12 @@ services:
       - ./swagger.yml:/api/swagger.yml
     depends_on:
       - php-api
+      
+  cors-proxy:
+    image: nginx:latest
+    ports:
+      - "8090:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-api      
